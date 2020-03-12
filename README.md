@@ -1,11 +1,68 @@
-Setting Up a Vagrant Environment for CodeWorkout
-============================================
+# CodeWorkout
 
-## Introduction:
+## Setting up a Development Environment for CodeWorkout
+
+The instructions below are aimed at macOS or Linux users. If you are on Windows, please jump to the section on a [Vagrant development environment](#using-a-virtual-machine-to-run-codeworkout).
+
+### Installing Ruby
+
+We recommend using Ruby version management software like [rbenv](https://github.com/rbenv/rbenv).
+Installation instructions [here](https://github.com/rbenv/rbenv#installation).
+
+Once you have `rbenv` installed, use it to install version 2.3.8:
+
+```
+rbenv install 2.3.8
+```
+
+Set the local version of Ruby (the one used in the `code-workout` project directory) to the one you just installed:
+
+```
+/path/to/code-workout $ rbenv local 2.3.8
+```
+
+Alternatively, you can install ruby on your machine using your operating system's package management software (e.g., `brew` on macOS, `apt` on Ubuntu, etc.).
+
+### Installing Dependencies 
+
+#### SQLite 
+
+CodeWorkout uses SQLite in development. Install it using your package manager.
+
+```bash
+brew install sqlite3 # macOS
+apt install sqlite3 # Ubuntu
+```
+
+#### Ruby gems
+*Gems* are Ruby packages that help us do certain things (e.g., a gem that manages other gems!).
+
+Issue the following command from your `code-workout` directory (the version number is important):
+
+```
+/path/to/code-workout $ gem install bundler -v 1.17.3
+```
+
+Then:
+
+```
+bundle install
+```
+
+### Populate the database
+Once you have Ruby, SQLite, and dependencies installed, you need some data with which to populate the website.
+Do the following:
+```
+rake db:populate
+```
+
+This will create a local database at `db/development.sqlite3` and populate it with seeded data (users, exercises, courses, etc.).
+
+## Using a Virtual Machine to Run CodeWorkout
 
 Vagrant is designed to run on multiple platforms, including Mac OS X, Microsoft Windows, Debian, Ubuntu, CentOS, RedHat and Fedora. In this document we describe how to configure and run CodeWorkout project virtual development environment through Vagrant.
 
-## Installation Steps:
+### Installation Steps
 
 1. Install [Vagrant](https://www.vagrantup.com/downloads.html)
 2. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
@@ -14,12 +71,12 @@ Vagrant is designed to run on multiple platforms, including Mac OS X, Microsoft 
 5. `$ vagrant up`
 6. `$ vagrant ssh`
 7. `$ cd /vagrant`
-8. `$ rails server`
+8. `$ ./runservers`
 9. After the provisioning script is complete you can go to:
 
-  * https://192.168.33.20:3000 for CodeWorkout server
+  * https://192.168.33.20:9292 for CodeWorkout server
 
-## Shut Down The Virtual Machine:
+### Shut Down The Virtual Machine
 
 After you finish your work, you need to turn the virtual machine off.
 
@@ -27,7 +84,7 @@ After you finish your work, you need to turn the virtual machine off.
 2. `$ cd code-workout`
 3. `$ vagrant halt`
 
-## Re-run Development Servers:
+### Re-run Development Servers
 
 If you decided to shut down the virtual machine using `vagrant halt`, you have to re-run the servers again after you do `vagrant up`.
 
@@ -37,7 +94,7 @@ If you decided to shut down the virtual machine using `vagrant halt`, you have t
 4. `$ cd /vagrant`
 5. `$ rails server`
 
-## Reprovision The Virtual Machine:
+### Reprovision The Virtual Machine
 
 If anything went wrong or you want to reprovision your virtual machine for any reason, follow these steps.
 
@@ -46,11 +103,11 @@ If anything went wrong or you want to reprovision your virtual machine for any r
 3. `$ vagrant destroy`
 4. `$ vagrant up`
 
-## Virtual Machine sudo password:
+### Virtual Machine sudo password
 
 sudo password is `vagrant` in case you need to execute any commands that require sudo.
 
-## CodeWorkout Database Test Data
+### CodeWorkout Database Test Data
 
 The initial database population is defined by lib/tasks/sample_data.rake.
 It uses the factories defined in spec/factories/* to generate entities.
@@ -82,7 +139,7 @@ in db/seeds.rb instead.
     - `$ rake db:populate`
     - `$ rails server`
 
-## Keep code-workout repository up to date:
+### Keep code-workout repository up to date
 
 During development of code-workout, other developers might add new gems to the project or add new migrations etc. To keep your local version up to date with the latest version do the following:
 
@@ -97,7 +154,7 @@ During development of code-workout, other developers might add new gems to the p
 - `$ rails server`
 
 
-## Upload and Test Programming Exercises:
+### Upload and Test Programming Exercises
 
 - Log in using your admin account admin@codeworkout.org (pass: adminadmin)
 - Click "Upload Exercises" in the navigation bar, then click "Choose File". Choose your exercise file and click "Submit File".
@@ -105,7 +162,7 @@ During development of code-workout, other developers might add new gems to the p
 - Go to the admin area by clicking on the little wrench icon to the left of the admin email address in the top menu bar. Click the "University-oriented" menu and select "Workout offerings". Click on "New Workout Offering". Create your new workout offering by choosing the course offering and the workout (the one you have just created in the previous step). Then select appropriate opening, soft deadline, and hard deadline dates for the workout offering and hit "Create Workout Offering" button to save it.
 - Log in using student account example-2@railstutorial.org (pass: hokiehokie). Then navigate to the course offering you have chosen in the previous step, you should see the new workout in the list of workouts for this course offering.
 
-## Connect to CodeWorkout Database:
+### Connect to CodeWorkout Database
 
 During development it is convenient to connect to CodeWorkout database from your host machine using [MySQL Workbench](https://www.mysql.com/products/workbench/). Once you installed MySQL Workbench create a new connection to CodeWorkout Database in the Vagrant machine using the following setup:
 
